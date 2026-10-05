@@ -185,8 +185,11 @@
   .gate .err{min-height:20px;margin-top:10px;color:#fecaca;font-size:13px}
 
   @media (max-width:1080px){
-    .grid{grid-template-columns:1fr}
+    .grid{grid-template-columns:repeat(2,1fr)}
     .card{min-height:0}
+  }
+  @media (max-width:720px){
+    .grid{grid-template-columns:1fr}
   }
   @media (max-width:860px){
     .workspace{grid-template-columns:1fr}
@@ -228,8 +231,8 @@
       <div class="home">
         <div class="eyebrow">Client Marketing Hub</div>
         <h1>Every number,<br><span>one place.</span></h1>
-        <p class="lede">Open a tracker beside the chat. Ask about leads, ads, or social, and the answer stays with the sheet.</p>
-        <div class="rule"><span><b>03</b> Trackers</span></div>
+        <p class="lede">Open a tracker beside the chat. Ask about the numbers, and the answer stays with the sheet.</p>
+        <div class="rule"><span><b id="trackerCount">06</b> Trackers</span></div>
         <div class="grid" id="grid"></div>
         <footer>
           <div class="tagline">Labour<i></i>Commercial<i></i>Litigation</div>
@@ -256,7 +259,7 @@
       <div class="chat-head">
         <div>
           <h2>Ask about the numbers</h2>
-          <p id="chatContext">Answers come from the three live trackers.</p>
+          <p id="chatContext">Answers come from the six live trackers.</p>
         </div>
         <button class="chat-close" id="chatClose" type="button">Close</button>
       </div>
@@ -264,7 +267,7 @@
       <div class="asof" id="asof"></div>
       <form class="composer" id="composer">
         <label class="visually-hidden" for="question" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Your question</label>
-        <textarea id="question" rows="1" placeholder="Ask about leads, ads, or social…"></textarea>
+        <textarea id="question" rows="1" placeholder="Ask about any of the trackers…"></textarea>
         <button class="send" type="submit" aria-label="Send">
           <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
@@ -293,6 +296,7 @@ const COPY = {
     desc: 'Enquiries and conversions in one view, so you can follow every lead from first contact to signed client.',
     icon: '<path d="M3 4h18l-7 8.5V19l-4 2v-8.5z"/>',
     bars: [30,42,38,55,62,58,74,86],
+    short: 'Leads',
     prompts: ['How are we tracking against the 15% growth target?', 'What was the conversion rate last month?', 'Which week brought in the most leads?']
   },
   ads: {
@@ -300,6 +304,7 @@ const COPY = {
     desc: 'The search terms behind your Google Ads, and how each keyword is performing over time.',
     icon: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/><path d="M8 10.5h5M10.5 8v5"/>',
     bars: [64,48,70,52,80,60,72,90],
+    short: 'Keywords',
     prompts: ['Which keywords spent the most last month?', 'What was the cost per conversion in September?', 'Which keywords actually converted?']
   },
   social: {
@@ -307,7 +312,32 @@ const COPY = {
     desc: "Posts, reach and engagement across CVN's social channels, tracked side by side.",
     icon: '<path d="M21 12a8.5 8.5 0 0 1-12.4 7.5L3 21l1.5-5.4A8.5 8.5 0 1 1 21 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/>',
     bars: [40,58,46,66,50,78,70,84],
+    short: 'Social',
     prompts: ['What was social revenue over the last four weeks?', 'How did Facebook reach change recently?', 'How does Google spend compare with weekly revenue?']
+  },
+  campaigns: {
+    sub: 'Weekly Results',
+    short: 'Ad results',
+    desc: 'Week-by-week spend, impressions, clicks, conversions and cost per conversion for every Google Ads and Facebook Ads campaign.',
+    icon: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+    bars: [36,52,44,60,72,64,82,92],
+    prompts: ['What did Google Ads spend last week?', 'How did Facebook cost per lead change?', 'Which campaign spent the most in the latest week?']
+  },
+  timing: {
+    sub: 'By Time of Week',
+    short: 'Time of week',
+    desc: 'Leads and deals won split between Monday–Wednesday and Thursday–Friday, with weekly totals and averages by time of week and week of the month.',
+    icon: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 14h3M8 17h6"/>',
+    bars: [44,70,52,78,40,66,58,88],
+    prompts: ['Do more leads arrive Monday to Wednesday or Thursday to Friday?', 'What is the average number of deals won early in the week?', 'How did the latest full week split by time of week?']
+  },
+  sources: {
+    sub: 'Per Week & by Source',
+    short: 'By source',
+    desc: 'Weekly leads and won deals, plus a breakdown of where those leads and deals are coming from.',
+    icon: '<circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.4 6.4"/><path d="M12 12H3"/>',
+    bars: [50,62,48,74,66,80,72,90],
+    prompts: ['How many leads and won deals were there in the latest week?', 'Which source is bringing the most leads?', 'How did won deals move over the last four weeks?']
   }
 };
 const ALL_PROMPTS = [
@@ -348,6 +378,24 @@ const STATIC_TRACKERS = [
     title: 'Social Media',
     previewUrl: 'https://docs.google.com/spreadsheets/d/1PU8nyz-eFU8PjItW6DBl7GKsOt4OG6nHH2fPzD9OATQ/preview?gid=216923981#gid=216923981',
     editUrl: 'https://docs.google.com/spreadsheets/d/1PU8nyz-eFU8PjItW6DBl7GKsOt4OG6nHH2fPzD9OATQ/edit?usp=sharing',
+  },
+  {
+    key: 'campaigns',
+    title: 'Google & Facebook Ads',
+    previewUrl: 'https://docs.google.com/spreadsheets/d/19vyUwAnQsmRqeVVc08bX8WwXwlEDFwxW2s6UBQAh9uI/preview?gid=0#gid=0',
+    editUrl: 'https://docs.google.com/spreadsheets/d/19vyUwAnQsmRqeVVc08bX8WwXwlEDFwxW2s6UBQAh9uI/edit?usp=sharing',
+  },
+  {
+    key: 'timing',
+    title: 'Leads & Deals by Time of Week',
+    previewUrl: 'https://docs.google.com/spreadsheets/d/1Tw2pYXKf5GWtZg2SYWlbuJjOQIaEq3oWrmtZLJ1l1Yc/preview?gid=1862776311#gid=1862776311',
+    editUrl: 'https://docs.google.com/spreadsheets/d/1Tw2pYXKf5GWtZg2SYWlbuJjOQIaEq3oWrmtZLJ1l1Yc/edit?usp=sharing',
+  },
+  {
+    key: 'sources',
+    title: 'Leads & Deals by Source',
+    previewUrl: 'https://docs.google.com/spreadsheets/d/1Sh0OXkc0T-3kh03QJrzN7R2Oc2Ju5_OqjMcM3QOXyPw/preview?gid=0#gid=0',
+    editUrl: 'https://docs.google.com/spreadsheets/d/1Sh0OXkc0T-3kh03QJrzN7R2Oc2Ju5_OqjMcM3QOXyPw/edit?usp=sharing',
   },
 ];
 
@@ -447,11 +495,13 @@ function paint(){
   } else if (open) {
     chatContext.textContent = `${open.title} is open. Questions can still use the other trackers.`;
   } else {
-    chatContext.textContent = 'Answers come from the three live trackers.';
+    chatContext.textContent = 'Answers come from the six live trackers.';
   }
 }
 
 function renderCards(){
+  const count = document.getElementById('trackerCount');
+  if (count) count.textContent = String(trackers.length).padStart(2, '0');
   grid.replaceChildren();
   switcher.replaceChildren();
   trackers.forEach((tracker, index) => {
@@ -480,7 +530,7 @@ function renderCards(){
 
     const tab = document.createElement('button');
     tab.type = 'button';
-    tab.textContent = tracker.title.replace('Google Ads ', '').replace(' & Conversions', '');
+    tab.textContent = copy.short || tracker.title;
     tab.addEventListener('click', () => openSheet(tracker.key));
     tab.dataset.key = tracker.key;
     switcher.appendChild(tab);
