@@ -330,10 +330,32 @@ const asof = document.getElementById('asof');
 const askToggle = document.getElementById('askToggle');
 const backdrop = document.getElementById('backdrop');
 
+const STATIC_TRACKERS = [
+  {
+    key: 'leads',
+    title: 'Leads & Conversions',
+    previewUrl: 'https://docs.google.com/spreadsheets/d/1u2UOfwkqekfHOcX9Z-9j3XjdlFiLZm2m9vpXjyGE6uo/preview?gid=426043146#gid=426043146',
+    editUrl: 'https://docs.google.com/spreadsheets/d/1u2UOfwkqekfHOcX9Z-9j3XjdlFiLZm2m9vpXjyGE6uo/edit?usp=sharing',
+  },
+  {
+    key: 'ads',
+    title: 'Google Ads Keywords',
+    previewUrl: 'https://docs.google.com/spreadsheets/d/1U8uwS8ctU9m70TbORWmhBv0WUMfVB5A6CYLWg3yR2-8/preview?gid=118871216#gid=118871216',
+    editUrl: 'https://docs.google.com/spreadsheets/d/1U8uwS8ctU9m70TbORWmhBv0WUMfVB5A6CYLWg3yR2-8/edit?usp=sharing',
+  },
+  {
+    key: 'social',
+    title: 'Social Media',
+    previewUrl: 'https://docs.google.com/spreadsheets/d/1PU8nyz-eFU8PjItW6DBl7GKsOt4OG6nHH2fPzD9OATQ/preview?gid=216923981#gid=216923981',
+    editUrl: 'https://docs.google.com/spreadsheets/d/1PU8nyz-eFU8PjItW6DBl7GKsOt4OG6nHH2fPzD9OATQ/edit?usp=sharing',
+  },
+];
+
 let trackers = [];
 let currentKey = null;
 let thread = [];
 let pending = false;
+let chatAvailable = true;
 
 function tick(){
   const now = new Date();
@@ -403,9 +425,13 @@ function paint(){
   }
   log.scrollTop = log.scrollHeight;
   const open = trackers.find((tracker) => tracker.key === currentKey);
-  chatContext.textContent = open
-    ? `${open.title} is open. Questions can still use the other trackers.`
-    : 'Answers come from the three live trackers.';
+  if (!chatAvailable) {
+    chatContext.textContent = 'The sheets are live on this page. Questions need the private hub, which GitHub Pages cannot run.';
+  } else if (open) {
+    chatContext.textContent = `${open.title} is open. Questions can still use the other trackers.`;
+  } else {
+    chatContext.textContent = 'Answers come from the three live trackers.';
+  }
 }
 
 function renderCards(){
@@ -491,10 +517,16 @@ async function send(text){
   question.value = '';
   question.style.height = 'auto';
   thread.push({ role: 'user', content });
+  if (!chatAvailable) {
+    thread.push({ role: 'assistant', content: 'This page can open the live sheets. Asking a question needs the private hub, and GitHub Pages only serves the page.' });
+    paint();
+    if (window.matchMedia('(max-width: 860px)').matches) setChatOpen(true);
+    return;
+  }
   pending = true;
   paint();
   try {
-    const res = await fetch('/api/chat', {
+    const res = await fetch('api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -544,23 +576,43 @@ document.addEventListener('keydown', (event) => {
   if (n >= 1 && n <= trackers.length) openSheet(trackers[n - 1].key);
 });
 
-async function loadTrackers(){
-  const res = await fetch('/api/trackers');
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || 'The trackers could not be loaded.');
-  trackers = data.trackers || [];
+function useStaticTrackers(){
+  trackers = STATIC_TRACKERS;
+  chatAvailable = false;
   renderCards();
   paint();
   const requested = new URL(location.href).searchParams.get('sheet');
   if (requested && trackers.some((tracker) => tracker.key === requested)) openSheet(requested);
 }
 
+async function loadTrackers(){
+  try {
+    const res = await fetch('api/trackers');
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'The trackers could not be loaded.');
+    trackers = data.trackers || [];
+    chatAvailable = true;
+    renderCards();
+    paint();
+    const requested = new URL(location.href).searchParams.get('sheet');
+    if (requested && trackers.some((tracker) => tracker.key === requested)) openSheet(requested);
+  } catch {
+    useStaticTrackers();
+  }
+}
+
 async function boot(){
   paint();
-  const session = await fetch('/api/session').then((res) => res.json());
-  if (session.required && !session.ok) {
-    document.getElementById('gate').hidden = false;
-    return;
+  try {
+    const res = await fetch('api/session');
+    if (!res.ok) throw new Error('no session');
+    const session = await res.json();
+    if (session.required && !session.ok) {
+      document.getElementById('gate').hidden = false;
+      return;
+    }
+  } catch {
+    chatAvailable = false;
   }
   await loadTrackers();
 }
