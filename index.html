@@ -352,7 +352,7 @@ const STATIC_TRACKERS = [
 ];
 
 const CHAT_API = 'https://europe-west2-rpla-40917.cloudfunctions.net/cvn-hub-api';
-const API_BASE = location.hostname.endsWith('github.io') ? CHAT_API : '';
+const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1' ? '' : CHAT_API;
 
 let trackers = [];
 let currentKey = null;
