@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CVN Attorneys · Marketing Hub</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 0 60 64'%3E%3Cpath fill='%233B82F6' d='M52.2%204.82C52.2%206.22%2051.06%207.37%2049.65%207.37L2.31%207.37C0.91%207.37%20-0.24%206.22%20-0.24%204.82C-0.24%204.11%200.05%203.48%200.51%203.01C0.97%202.55%201.61%202.27%202.31%202.27L49.65%202.27C51.06%202.27%2052.2%203.41%2052.2%204.82ZM50.19%2010.46C50.19%2011.17%2049.62%2011.73%2048.92%2011.73L41.2%2011.73L41.2%2045.55L36.1%2050.65L36.1%2011.73L28.53%2011.73L28.53%2058.22L25.98%2060.77L23.43%2058.22L23.43%2011.73L15.86%2011.73L15.86%2050.65L10.77%2045.55L10.77%2011.73L3.04%2011.73C2.34%2011.73%201.77%2011.17%201.77%2010.46C1.77%2010.11%201.91%209.79%202.14%209.56C2.37%209.33%202.69%209.19%203.04%209.19L48.92%209.19C49.62%209.19%2050.19%209.76%2050.19%2010.46Z'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --gunmetal:#1F2937;
+    --gunmetal-deep:#161E2A;
+    --gunmetal-lift:#273445;
+    --seasalt:#F9FAFB;
+    --royal:#2563EB;
+    --azure:#3B82F6;
+    --muted:rgba(249,250,251,.62);
+    --hair:rgba(249,250,251,.09);
+    --font:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    --chat:380px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--font);color:var(--seasalt);background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(37,99,235,.16), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(59,130,246,.08), transparent 60%),
+      linear-gradient(135deg,var(--gunmetal-deep) 0%,var(--gunmetal) 55%,#223044 100%);
+    -webkit-font-smoothing:antialiased;overflow:hidden;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;
+    background-image:radial-gradient(rgba(249,250,251,.11) 1px,transparent 1.4px);
+    background-size:22px 22px;
+    -webkit-mask-image:radial-gradient(ellipse 70% 60% at 80% 10%,#000 0%,transparent 75%);
+            mask-image:radial-gradient(ellipse 70% 60% at 80% 10%,#000 0%,transparent 75%);
+  }
+  button,textarea,input{font-family:inherit;color:inherit}
+  button{cursor:pointer}
+  .app{position:relative;height:100%;display:grid;grid-template-rows:auto minmax(0,1fr)}
+
+  header{
+    display:flex;align-items:center;justify-content:space-between;gap:20px;
+    padding:18px 28px;border-bottom:1px solid var(--hair);
+    background:rgba(22,30,42,.45);backdrop-filter:blur(10px);
+  }
+  .logo{height:30px;width:auto;display:block}
+  .logo .icon{fill:var(--azure)} .logo .word{fill:var(--seasalt)}
+  .meta{display:flex;align-items:center;gap:16px}
+  .live{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid var(--hair);border-radius:999px;background:rgba(249,250,251,.03);font-size:13px;color:var(--muted)}
+  .live i{width:7px;height:7px;border-radius:50%;background:var(--azure);box-shadow:0 0 0 0 rgba(59,130,246,.7);animation:ping 2.2s infinite}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(59,130,246,.6)}70%{box-shadow:0 0 0 9px rgba(59,130,246,0)}100%{box-shadow:0 0 0 0 rgba(59,130,246,0)}}
+  .now{text-align:right}
+  .now span{display:block;font-size:12px;color:var(--muted);font-weight:300}
+  .now strong{font-size:20px;font-weight:400;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+
+  .workspace{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) var(--chat)}
+  main{min-height:0;overflow:auto}
+  .home{max-width:1080px;margin:0 auto;padding:42px 32px 48px}
+  .eyebrow{font-size:13px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--azure);display:flex;align-items:center;gap:14px}
+  .eyebrow::before{content:"";width:34px;height:2px;background:var(--royal)}
+  h1{font-size:clamp(36px,4.6vw,60px);line-height:1.02;font-weight:500;letter-spacing:-.025em;margin:18px 0 16px}
+  h1 span{color:var(--azure)}
+  .lede{font-size:17px;line-height:1.6;color:var(--muted);max-width:560px;font-weight:300}
+  .rule{display:flex;align-items:center;gap:18px;color:var(--muted);font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin:36px 0 18px}
+  .rule::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--hair),transparent)}
+  .rule b{font-weight:500;color:var(--seasalt)}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{
+    --mx:50%;--my:0%;
+    position:relative;display:flex;flex-direction:column;min-height:340px;padding:26px 24px 22px;
+    border-radius:18px;text-align:left;color:inherit;isolation:isolate;overflow:hidden;
+    background:linear-gradient(180deg,rgba(39,52,69,.78),rgba(31,41,55,.78));
+    border:1px solid var(--hair);
+    box-shadow:0 1px 0 rgba(249,250,251,.05) inset,0 30px 60px -30px rgba(0,0,0,.6);
+    transition:transform .5s cubic-bezier(.2,.8,.2,1),border-color .4s,box-shadow .5s;
+  }
+  .card::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .4s;
+    background:radial-gradient(420px circle at var(--mx) var(--my),rgba(59,130,246,.18),transparent 45%)}
+  .card::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;z-index:-1;opacity:0;transition:opacity .4s;
+    background:radial-gradient(300px circle at var(--mx) var(--my),var(--azure),transparent 60%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+  .card:hover,.card:focus-within{transform:translateY(-6px);box-shadow:0 1px 0 rgba(249,250,251,.06) inset,0 40px 80px -30px rgba(37,99,235,.35)}
+  .card:hover::before,.card:hover::after,.card:focus-within::before,.card:focus-within::after{opacity:1}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start}
+  .num{font-size:13px;color:var(--muted);letter-spacing:.18em;font-variant-numeric:tabular-nums}
+  .ico{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;
+    background:linear-gradient(135deg,rgba(37,99,235,.22),rgba(59,130,246,.06));border:1px solid rgba(59,130,246,.28)}
+  .ico svg{width:24px;height:24px;stroke:var(--azure);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .bars{display:flex;align-items:flex-end;gap:7px;height:56px;margin:28px 0 20px}
+  .bars span{flex:1;max-width:14px;border-radius:3px 3px 1px 1px;background:linear-gradient(180deg,var(--azure),rgba(37,99,235,.15));height:calc(var(--h)*.45)}
+  .card h2{font-size:22px;line-height:1.2;font-weight:500;letter-spacing:-.01em;margin-bottom:10px}
+  .card h2 em{display:block;color:var(--muted);font-style:normal;font-weight:300}
+  .card p{font-size:14.5px;line-height:1.55;color:var(--muted);font-weight:300}
+  .cta{margin-top:auto;padding-top:22px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .btn,.send,.ask-toggle,.gate button{
+    display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:999px;border:0;font-size:14px;font-weight:500;
+    background:var(--royal);color:var(--seasalt);box-shadow:0 10px 24px -10px rgba(37,99,235,.9);
+  }
+  .btn svg,.send svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+  .card:hover .btn{background:var(--azure)}
+  .key{font-size:12px;color:var(--muted)}
+  kbd{font-family:var(--font);font-size:11px;padding:3px 7px;border-radius:6px;border:1px solid var(--hair);background:rgba(249,250,251,.04);color:var(--seasalt)}
+  .ext{font-size:12px;color:var(--muted);text-decoration:none;border-bottom:1px solid transparent}
+  .ext:hover{color:var(--azure);border-bottom-color:rgba(59,130,246,.5)}
+  footer{margin-top:42px;padding-top:22px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+  .tagline{letter-spacing:.08em}
+  .tagline i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--azure);margin:0 10px;vertical-align:middle}
+  footer a{color:var(--seasalt);text-decoration:none;border-bottom:1px solid rgba(59,130,246,.5)}
+  footer a:hover{color:var(--azure)}
+
+  .stage{display:none;height:100%;min-height:0;flex-direction:column}
+  body.sheet-open .home{display:none}
+  body.sheet-open .stage{display:flex}
+  body.sheet-open main{overflow:hidden}
+  .stage-bar{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--hair)}
+  .back,.switch button{
+    background:transparent;border:1px solid var(--hair);color:var(--seasalt);border-radius:999px;padding:8px 12px;font-size:13px;
+  }
+  .back:hover,.switch button:hover,.switch button.on{border-color:rgba(59,130,246,.55);color:var(--azure)}
+  .switch{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+  .stage-title{font-size:15px;font-weight:500}
+  .frame-wrap{position:relative;flex:1;min-height:0;margin:12px;border-radius:16px;overflow:hidden;border:1px solid var(--hair);background:#0f1620}
+  .frame-wrap iframe{width:100%;height:100%;border:0;background:#fff}
+  .frame-loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);background:#0f1620;font-size:14px}
+  .frame-loading.hide{display:none}
+
+  .chat{
+    min-height:0;display:flex;flex-direction:column;
+    border-left:1px solid var(--hair);
+    background:rgba(22,30,42,.78);backdrop-filter:blur(16px);
+  }
+  .chat-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 18px 12px;border-bottom:1px solid var(--hair)}
+  .chat-head h2{font-size:16px;font-weight:500;letter-spacing:-.01em}
+  .chat-head p{margin-top:4px;font-size:12.5px;line-height:1.45;color:var(--muted);font-weight:300}
+  .chat-close{display:none;background:transparent;border:1px solid var(--hair);border-radius:999px;padding:7px 12px;font-size:12px;color:var(--seasalt)}
+  .log{flex:1;min-height:0;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+  .msg{max-width:94%;padding:11px 13px;border-radius:14px;font-size:14px;line-height:1.55;font-weight:300}
+  .msg.user{margin-left:auto;background:var(--royal);border-bottom-right-radius:5px;font-weight:400}
+  .msg.assistant{background:rgba(249,250,251,.04);border:1px solid var(--hair);border-bottom-left-radius:5px}
+  .msg.error{border-color:rgba(248,113,113,.45);color:#fecaca}
+  .msg p+p,.msg ul{margin-top:8px}
+  .msg ul{padding-left:18px}
+  .msg strong{font-weight:500;color:var(--seasalt)}
+  .empty{margin:auto 0;color:var(--muted);font-size:14px;line-height:1.55;font-weight:300}
+  .empty strong{display:block;color:var(--seasalt);font-weight:500;margin-bottom:6px}
+  .chips{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+  .chips button{
+    text-align:left;background:rgba(249,250,251,.03);border:1px solid var(--hair);border-radius:12px;
+    padding:10px 12px;font-size:13px;line-height:1.4;color:var(--seasalt);
+  }
+  .chips button:hover{border-color:rgba(59,130,246,.5);color:var(--azure)}
+  .pending{font-size:13px;color:var(--muted);padding:0 4px}
+  .composer{padding:12px;border-top:1px solid var(--hair);display:flex;gap:8px;align-items:flex-end}
+  .composer textarea{
+    flex:1;resize:none;min-height:46px;max-height:120px;padding:12px 14px;border-radius:14px;
+    border:1px solid var(--hair);background:rgba(249,250,251,.04);outline:none;font-size:14px;line-height:1.4;
+  }
+  .composer textarea:focus{border-color:rgba(59,130,246,.6)}
+  .send{width:46px;height:46px;padding:0;justify-content:center;flex:none}
+  .send:disabled,.composer textarea:disabled{opacity:.55;cursor:default}
+  .asof{padding:0 16px 10px;font-size:11px;letter-spacing:.04em;color:var(--muted)}
+
+  .ask-toggle{display:none;position:fixed;right:16px;bottom:16px;z-index:30;box-shadow:0 16px 40px -16px rgba(37,99,235,.9)}
+  .backdrop{display:none}
+
+  .gate{
+    position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:24px;
+    background:rgba(15,22,32,.72);backdrop-filter:blur(8px);
+  }
+  .gate[hidden]{display:none}
+  .gate form{
+    width:min(420px,100%);padding:28px;border-radius:18px;border:1px solid var(--hair);
+    background:linear-gradient(180deg,rgba(39,52,69,.94),rgba(22,30,42,.94));
+    box-shadow:0 30px 80px -30px rgba(0,0,0,.7);
+  }
+  .gate h2{font-size:28px;font-weight:500;letter-spacing:-.02em;margin:8px 0 8px}
+  .gate p{color:var(--muted);font-weight:300;line-height:1.5;margin-bottom:18px}
+  .gate input{
+    width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--hair);
+    background:rgba(249,250,251,.04);outline:none;font-size:15px;margin-bottom:12px;
+  }
+  .gate input:focus{border-color:rgba(59,130,246,.6)}
+  .gate button{width:100%;justify-content:center}
+  .gate .err{min-height:20px;margin-top:10px;color:#fecaca;font-size:13px}
+
+  @media (max-width:1080px){
+    .grid{grid-template-columns:1fr}
+    .card{min-height:0}
+  }
+  @media (max-width:860px){
+    .workspace{grid-template-columns:1fr}
+    header{padding:14px 16px}
+    .home{padding:28px 16px 96px}
+    .now span,.live span,.key{display:none}
+    .logo{height:24px}
+    .chat{
+      position:fixed;left:12px;right:12px;bottom:12px;height:min(74vh,680px);z-index:25;
+      border:1px solid var(--hair);border-radius:18px;transform:translateY(120%);
+      transition:transform .35s cubic-bezier(.2,.8,.2,1);box-shadow:0 30px 80px -24px rgba(0,0,0,.7);
+    }
+    body.chat-open .chat{transform:none}
+    .ask-toggle{display:inline-flex}
+    body.chat-open .ask-toggle{display:none}
+    .chat-close{display:inline-flex}
+    .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:24}
+    body.chat-open .backdrop{display:block}
+    .switch{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <svg class="logo" viewBox="-1 2 367 59" role="img" aria-label="CVN Attorneys">
+      <path class="icon" d="M52.2 4.82C52.2 6.22 51.06 7.37 49.65 7.37L2.31 7.37C0.91 7.37 -0.24 6.22 -0.24 4.82C-0.24 4.11 0.05 3.48 0.51 3.01C0.97 2.55 1.61 2.27 2.31 2.27L49.65 2.27C51.06 2.27 52.2 3.41 52.2 4.82ZM50.19 10.46C50.19 11.17 49.62 11.73 48.92 11.73L41.2 11.73L41.2 45.55L36.1 50.65L36.1 11.73L28.53 11.73L28.53 58.22L25.98 60.77L23.43 58.22L23.43 11.73L15.86 11.73L15.86 50.65L10.77 45.55L10.77 11.73L3.04 11.73C2.34 11.73 1.77 11.17 1.77 10.46C1.77 10.11 1.91 9.79 2.14 9.56C2.37 9.33 2.69 9.19 3.04 9.19L48.92 9.19C49.62 9.19 50.19 9.76 50.19 10.46Z"/>
+      <path class="word" d="M77.27 41.18C75.52 40.21 74.15 38.89 73.16 37.21C72.16 35.52 71.67 33.62 71.67 31.52C71.67 29.41 72.16 27.51 73.16 25.83C74.15 24.14 75.52 22.82 77.28 21.86C79.04 20.9 81 20.41 83.17 20.41C84.87 20.41 86.42 20.7 87.82 21.27C89.23 21.84 90.43 22.68 91.42 23.79L89.41 25.75C87.77 24.03 85.74 23.17 83.3 23.17C81.68 23.17 80.23 23.54 78.92 24.26C77.62 24.98 76.6 25.98 75.87 27.25C75.14 28.52 74.77 29.95 74.77 31.52C74.77 33.09 75.14 34.51 75.87 35.78C76.6 37.05 77.62 38.05 78.92 38.77C80.23 39.5 81.68 39.86 83.3 39.86C85.72 39.86 87.75 38.99 89.41 37.25L91.42 39.21C90.43 40.32 89.22 41.17 87.81 41.75C86.39 42.33 84.84 42.62 83.14 42.62C80.97 42.62 79.01 42.14 77.27 41.18ZM116.82 20.66L107.3 42.37L104.23 42.37L94.68 20.66L98.03 20.66L105.84 38.49L113.72 20.66L116.82 20.66ZM140.57 20.66L140.57 42.37L138.03 42.37L125 26.18L125 42.37L121.9 42.37L121.9 20.66L124.45 20.66L137.47 36.85L137.47 20.66L140.57 20.66ZM172.82 34.46L168.14 23.83L163.46 34.46L172.82 34.46M173.91 36.94L162.37 36.94L159.98 42.37L156.79 42.37L166.62 20.66L169.69 20.66L179.55 42.37L176.29 42.37L173.91 36.94ZM188.33 23.36L180.88 23.36L180.88 20.66L198.84 20.66L198.84 23.36L191.4 23.36L191.4 42.37L188.33 42.37L188.33 23.36ZM209.16 23.36L201.72 23.36L201.72 20.66L219.68 20.66L219.68 23.36L212.23 23.36L212.23 42.37L209.16 42.37L209.16 23.36ZM239.17 38.77C240.44 38.05 241.44 37.05 242.17 35.78C242.91 34.51 243.27 33.09 243.27 31.52C243.27 29.95 242.91 28.52 242.17 27.25C241.44 25.98 240.44 24.98 239.17 24.26C237.89 23.54 236.46 23.18 234.87 23.18C233.28 23.18 231.84 23.54 230.54 24.26C229.25 24.98 228.24 25.98 227.51 27.25C226.77 28.52 226.41 29.95 226.41 31.52C226.41 33.09 226.77 34.51 227.51 35.78C228.24 37.05 229.25 38.05 230.54 38.77C231.84 39.5 233.28 39.86 234.87 39.86C236.46 39.86 237.89 39.5 239.17 38.77M228.95 41.18C227.19 40.22 225.81 38.89 224.81 37.19C223.8 35.5 223.3 33.6 223.3 31.52C223.3 29.43 223.8 27.54 224.81 25.84C225.81 24.15 227.19 22.82 228.95 21.86C230.7 20.9 232.68 20.42 234.87 20.42C237.04 20.42 239.01 20.9 240.76 21.86C242.52 22.82 243.89 24.14 244.89 25.83C245.88 27.51 246.38 29.41 246.38 31.52C246.38 33.63 245.88 35.52 244.89 37.21C243.89 38.89 242.52 40.22 240.76 41.18C239.01 42.14 237.04 42.62 234.87 42.62C232.68 42.62 230.7 42.14 228.95 41.18ZM266.31 31.86C267.35 31.01 267.87 29.8 267.87 28.23C267.87 26.66 267.35 25.45 266.31 24.62C265.28 23.78 263.78 23.36 261.82 23.36L256.55 23.36L256.55 33.13L261.82 33.13C263.78 33.13 265.28 32.71 266.31 31.86M267.96 42.37L263.28 35.7C262.7 35.74 262.24 35.76 261.91 35.76L256.55 35.76L256.55 42.37L253.45 42.37L253.45 20.66L261.91 20.66C264.72 20.66 266.93 21.33 268.55 22.68C270.16 24.02 270.97 25.87 270.97 28.23C270.97 29.9 270.55 31.33 269.73 32.51C268.9 33.69 267.72 34.55 266.19 35.08L271.34 42.37L267.96 42.37ZM296.98 20.66L296.98 42.37L294.44 42.37L281.42 26.18L281.42 42.37L278.31 42.37L278.31 20.66L280.86 20.66L293.88 36.85L293.88 20.66L296.98 20.66ZM321.57 39.67L321.57 42.37L305.82 42.37L305.82 20.66L321.14 20.66L321.14 23.36L308.92 23.36L308.92 30.03L319.8 30.03L319.8 32.66L308.92 32.66L308.92 39.67L321.57 39.67ZM336.98 34.87L336.98 42.37L333.91 42.37L333.91 34.8L325.29 20.66L328.61 20.66L335.56 32.11L342.54 20.66L345.61 20.66L336.98 34.87ZM352.19 41.86C350.67 41.35 349.48 40.7 348.61 39.89L349.76 37.47C350.59 38.21 351.65 38.82 352.94 39.28C354.23 39.75 355.56 39.98 356.92 39.98C358.72 39.98 360.07 39.68 360.95 39.07C361.84 38.46 362.29 37.65 362.29 36.63C362.29 35.89 362.04 35.28 361.56 34.82C361.07 34.35 360.47 34 359.76 33.75C359.05 33.5 358.04 33.22 356.74 32.91C355.1 32.52 353.79 32.13 352.78 31.73C351.78 31.34 350.92 30.74 350.21 29.92C349.5 29.1 349.14 28 349.14 26.62C349.14 25.46 349.44 24.42 350.05 23.49C350.66 22.55 351.59 21.81 352.83 21.25C354.07 20.69 355.61 20.42 357.45 20.42C358.73 20.42 359.99 20.58 361.23 20.91C362.47 21.24 363.54 21.72 364.43 22.34L363.4 24.82C362.49 24.24 361.52 23.8 360.49 23.5C359.46 23.2 358.44 23.05 357.45 23.05C355.69 23.05 354.37 23.37 353.5 24.01C352.62 24.65 352.18 25.48 352.18 26.49C352.18 27.24 352.43 27.84 352.92 28.31C353.42 28.77 354.03 29.13 354.77 29.39C355.5 29.65 356.5 29.93 357.76 30.21C359.39 30.61 360.71 31 361.7 31.39C362.69 31.79 363.54 32.38 364.26 33.19C364.97 34 365.33 35.08 365.33 36.45C365.33 37.58 365.02 38.62 364.4 39.56C363.78 40.5 362.84 41.25 361.57 41.8C360.31 42.34 358.76 42.62 356.92 42.62C355.29 42.62 353.71 42.37 352.19 41.86Z"/>
+    </svg>
+    <div class="meta">
+      <div class="live"><i></i><span>Live Google Sheets</span></div>
+      <div class="now"><span id="greet">Welcome</span><strong id="clock">--:--</strong></div>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <main>
+      <div class="home">
+        <div class="eyebrow">Client Marketing Hub</div>
+        <h1>Every number,<br><span>one place.</span></h1>
+        <p class="lede">Open a tracker beside the chat. Ask about leads, ads, or social, and the answer stays with the sheet.</p>
+        <div class="rule"><span><b>03</b> Trackers</span></div>
+        <div class="grid" id="grid"></div>
+        <footer>
+          <div class="tagline">Labour<i></i>Commercial<i></i>Litigation</div>
+          <div><a href="https://www.cvninc.co.za" target="_blank" rel="noopener">cvninc.co.za</a> &nbsp;·&nbsp; 012 051 7070</div>
+          <div>Managed by NovaRock Creative</div>
+        </footer>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="stage-bar">
+          <button class="back" type="button" id="back">Trackers</button>
+          <div class="stage-title" id="stageTitle">Sheet</div>
+          <div class="switch" id="switch"></div>
+          <a class="ext" id="editLink" href="#" target="_blank" rel="noopener">Open in Google Sheets</a>
+        </div>
+        <div class="frame-wrap">
+          <div class="frame-loading" id="frameLoading">Opening the sheet…</div>
+          <iframe id="frame" title="Marketing sheet" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+      </div>
+    </main>
+
+    <aside class="chat" id="chat" aria-label="Ask about the numbers">
+      <div class="chat-head">
+        <div>
+          <h2>Ask about the numbers</h2>
+          <p id="chatContext">Answers come from the three live trackers.</p>
+        </div>
+        <button class="chat-close" id="chatClose" type="button">Close</button>
+      </div>
+      <div class="log" id="log" role="log" aria-live="polite"></div>
+      <div class="asof" id="asof"></div>
+      <form class="composer" id="composer">
+        <label class="visually-hidden" for="question" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Your question</label>
+        <textarea id="question" rows="1" placeholder="Ask about leads, ads, or social…"></textarea>
+        <button class="send" type="submit" aria-label="Send">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+    </aside>
+  </div>
+</div>
+<button class="ask-toggle" id="askToggle" type="button">Ask</button>
+<div class="backdrop" id="backdrop"></div>
+
+<div class="gate" id="gate" hidden>
+  <form id="gateForm">
+    <div class="eyebrow">Client Marketing Hub</div>
+    <h2>Welcome in.</h2>
+    <p>Enter the access code to view the trackers and ask about the numbers.</p>
+    <input id="code" type="password" autocomplete="current-password" placeholder="Access code" required>
+    <button type="submit">Continue</button>
+    <div class="err" id="gateErr"></div>
+  </form>
+</div>
+
+<script>
+const COPY = {
+  leads: {
+    sub: 'Tracking Dashboard',
+    desc: 'Enquiries and conversions in one view, so you can follow every lead from first contact to signed client.',
+    icon: '<path d="M3 4h18l-7 8.5V19l-4 2v-8.5z"/>',
+    bars: [30,42,38,55,62,58,74,86],
+    prompts: ['How are we tracking against the 15% growth target?', 'What was the conversion rate last month?', 'Which week brought in the most leads?']
+  },
+  ads: {
+    sub: 'Tracking Sheet',
+    desc: 'The search terms behind your Google Ads, and how each keyword is performing over time.',
+    icon: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/><path d="M8 10.5h5M10.5 8v5"/>',
+    bars: [64,48,70,52,80,60,72,90],
+    prompts: ['Which keywords spent the most last month?', 'What was the cost per conversion in September?', 'Which keywords actually converted?']
+  },
+  social: {
+    sub: 'Tracking Sheet',
+    desc: "Posts, reach and engagement across CVN's social channels, tracked side by side.",
+    icon: '<path d="M21 12a8.5 8.5 0 0 1-12.4 7.5L3 21l1.5-5.4A8.5 8.5 0 1 1 21 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/>',
+    bars: [40,58,46,66,50,78,70,84],
+    prompts: ['What was social revenue over the last four weeks?', 'How did Facebook reach change recently?', 'How does Google spend compare with weekly revenue?']
+  }
+};
+const ALL_PROMPTS = [
+  'How are we tracking against the 15% growth target?',
+  'Which keywords spent the most last month?',
+  'What was social revenue over the last four weeks?'
+];
+
+const grid = document.getElementById('grid');
+const frame = document.getElementById('frame');
+const frameLoading = document.getElementById('frameLoading');
+const stageTitle = document.getElementById('stageTitle');
+const editLink = document.getElementById('editLink');
+const switcher = document.getElementById('switch');
+const log = document.getElementById('log');
+const composer = document.getElementById('composer');
+const question = document.getElementById('question');
+const chatContext = document.getElementById('chatContext');
+const asof = document.getElementById('asof');
+const askToggle = document.getElementById('askToggle');
+const backdrop = document.getElementById('backdrop');
+
+let trackers = [];
+let currentKey = null;
+let thread = [];
+let pending = false;
+
+function tick(){
+  const now = new Date();
+  const tz = 'Africa/Johannesburg';
+  const h = +new Intl.DateTimeFormat('en-ZA',{hour:'numeric',hour12:false,timeZone:tz}).format(now);
+  document.getElementById('greet').textContent = h<12 ? 'Good morning' : h<17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('clock').textContent = new Intl.DateTimeFormat('en-ZA',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz}).format(now);
+}
+tick();
+setInterval(tick, 15000);
+
+function escapeHtml(value){
+  return value.replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function inline(value){
+  return value.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+function renderRich(text){
+  return escapeHtml(text).split(/\n{2,}/).map((block) => {
+    const lines = block.split('\n');
+    const items = lines.filter((line) => /^[-•]\s+/.test(line));
+    if (items.length && items.length === lines.filter((line) => line.trim()).length) {
+      return `<ul>${items.map((line) => `<li>${inline(line.replace(/^[-•]\s+/, ''))}</li>`).join('')}</ul>`;
+    }
+    return `<p>${lines.map(inline).join('<br>')}</p>`;
+  }).join('');
+}
+
+function promptsFor(){
+  return (currentKey && COPY[currentKey]) ? COPY[currentKey].prompts : ALL_PROMPTS;
+}
+
+function paint(){
+  log.replaceChildren();
+  if (!thread.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    const title = document.createElement('strong');
+    title.textContent = 'Ask in plain language.';
+    empty.appendChild(title);
+    empty.appendChild(document.createTextNode('The chat reads the live sheets and names the period it used.'));
+    const chips = document.createElement('div');
+    chips.className = 'chips';
+    promptsFor().forEach((prompt) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = prompt;
+      button.addEventListener('click', () => send(prompt));
+      chips.appendChild(button);
+    });
+    empty.appendChild(chips);
+    log.appendChild(empty);
+  } else {
+    thread.forEach((message) => {
+      const node = document.createElement('div');
+      node.className = `msg ${message.role}${message.error ? ' error' : ''}`;
+      if (message.role === 'assistant' && !message.error) node.innerHTML = renderRich(message.content);
+      else node.textContent = message.content;
+      log.appendChild(node);
+    });
+  }
+  if (pending) {
+    const wait = document.createElement('div');
+    wait.className = 'pending';
+    wait.textContent = 'Checking the sheets…';
+    log.appendChild(wait);
+  }
+  log.scrollTop = log.scrollHeight;
+  const open = trackers.find((tracker) => tracker.key === currentKey);
+  chatContext.textContent = open
+    ? `${open.title} is open. Questions can still use the other trackers.`
+    : 'Answers come from the three live trackers.';
+}
+
+function renderCards(){
+  grid.replaceChildren();
+  switcher.replaceChildren();
+  trackers.forEach((tracker, index) => {
+    const copy = COPY[tracker.key] || { sub: 'Tracking Sheet', desc: '', icon: '', bars: [40,60,50,70] };
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="ico"><svg viewBox="0 0 24 24">${copy.icon}</svg></div>
+        <div class="num">0${index + 1}</div>
+      </div>
+      <div class="bars">${copy.bars.map((h) => `<span style="--h:${h}px"></span>`).join('')}</div>
+      <h2>${tracker.title}<em>${copy.sub}</em></h2>
+      <p>${copy.desc}</p>
+      <div class="cta">
+        <button class="btn" type="button">View sheet <svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></button>
+        <span class="key">Press <kbd>${index + 1}</kbd></span>
+      </div>`;
+    card.querySelector('.btn').addEventListener('click', () => openSheet(tracker.key));
+    card.addEventListener('pointermove', (event) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (event.clientX - rect.left) + 'px');
+      card.style.setProperty('--my', (event.clientY - rect.top) + 'px');
+    });
+    grid.appendChild(card);
+
+    const tab = document.createElement('button');
+    tab.type = 'button';
+    tab.textContent = tracker.title.replace('Google Ads ', '').replace(' & Conversions', '');
+    tab.addEventListener('click', () => openSheet(tracker.key));
+    tab.dataset.key = tracker.key;
+    switcher.appendChild(tab);
+  });
+}
+
+function openSheet(key){
+  const tracker = trackers.find((item) => item.key === key);
+  if (!tracker) return;
+  currentKey = key;
+  frameLoading.classList.remove('hide');
+  frame.src = tracker.previewUrl;
+  frame.title = tracker.title;
+  stageTitle.textContent = tracker.title;
+  editLink.href = tracker.editUrl;
+  document.body.classList.add('sheet-open');
+  switcher.querySelectorAll('button').forEach((button) => button.classList.toggle('on', button.dataset.key === key));
+  const url = new URL(location.href);
+  url.searchParams.set('sheet', key);
+  history.replaceState(null, '', url);
+  paint();
+}
+
+function closeSheet(){
+  currentKey = null;
+  document.body.classList.remove('sheet-open');
+  frame.src = 'about:blank';
+  const url = new URL(location.href);
+  url.searchParams.delete('sheet');
+  history.replaceState(null, '', url);
+  paint();
+}
+
+frame.addEventListener('load', () => {
+  if (frame.src && !frame.src.endsWith('about:blank')) frameLoading.classList.add('hide');
+});
+
+document.getElementById('back').addEventListener('click', closeSheet);
+
+function setChatOpen(open){
+  document.body.classList.toggle('chat-open', open);
+  askToggle.textContent = open ? 'Close' : 'Ask';
+}
+askToggle.addEventListener('click', () => setChatOpen(true));
+document.getElementById('chatClose').addEventListener('click', () => setChatOpen(false));
+backdrop.addEventListener('click', () => setChatOpen(false));
+
+async function send(text){
+  const content = (text ?? question.value).trim();
+  if (!content || pending) return;
+  question.value = '';
+  question.style.height = 'auto';
+  thread.push({ role: 'user', content });
+  pending = true;
+  paint();
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        focus: currentKey,
+        messages: thread.filter((message) => !message.error).map(({ role, content }) => ({ role, content })),
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.status === 401) {
+      document.getElementById('gate').hidden = false;
+      throw new Error(data.error || 'Enter the access code to continue.');
+    }
+    if (!res.ok) throw new Error(data.error || 'The chat could not answer just now.');
+    thread.push({ role: 'assistant', content: data.reply });
+    if (data.asOf) {
+      const when = new Intl.DateTimeFormat('en-ZA', { hour:'2-digit', minute:'2-digit', hour12:false, timeZone:'Africa/Johannesburg' }).format(new Date(data.asOf));
+      asof.textContent = `Sheets read at ${when}`;
+    }
+  } catch (error) {
+    thread.push({ role: 'assistant', content: error.message, error: true });
+  } finally {
+    pending = false;
+    paint();
+    if (window.matchMedia('(max-width: 860px)').matches) setChatOpen(true);
+  }
+}
+
+composer.addEventListener('submit', (event) => {
+  event.preventDefault();
+  send();
+});
+question.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    send();
+  }
+});
+question.addEventListener('input', () => {
+  question.style.height = 'auto';
+  question.style.height = Math.min(question.scrollHeight, 120) + 'px';
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.metaKey || event.ctrlKey || event.altKey) return;
+  if (event.target.closest('input, textarea')) return;
+  const n = parseInt(event.key, 10);
+  if (n >= 1 && n <= trackers.length) openSheet(trackers[n - 1].key);
+});
+
+async function loadTrackers(){
+  const res = await fetch('/api/trackers');
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'The trackers could not be loaded.');
+  trackers = data.trackers || [];
+  renderCards();
+  paint();
+  const requested = new URL(location.href).searchParams.get('sheet');
+  if (requested && trackers.some((tracker) => tracker.key === requested)) openSheet(requested);
+}
+
+async function boot(){
+  paint();
+  const session = await fetch('/api/session').then((res) => res.json());
+  if (session.required && !session.ok) {
+    document.getElementById('gate').hidden = false;
+    return;
+  }
+  await loadTrackers();
+}
+
+document.getElementById('gateForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const gateErr = document.getElementById('gateErr');
+  gateErr.textContent = '';
+  const res = await fetch('/api/session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: document.getElementById('code').value }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    gateErr.textContent = data.error || 'That access code is not right.';
+    return;
+  }
+  document.getElementById('gate').hidden = true;
+  try { await loadTrackers(); }
+  catch (error) { gateErr.textContent = error.message; document.getElementById('gate').hidden = false; }
+});
+
+boot().catch((error) => {
+  grid.textContent = error.message;
+});
+</script>
+</body>
+</html>

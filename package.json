@@ -1,0 +1,8 @@
+{
+  "name": "cvn-marketing-hub",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  }
+}
