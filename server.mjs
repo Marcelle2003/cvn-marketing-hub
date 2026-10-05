@@ -94,13 +94,42 @@ function parseCookies(req) {
   return out;
 }
 
+function presentedToken(req) {
+  const header = req.headers.authorization || '';
+  if (typeof header === 'string' && header.toLowerCase().startsWith('bearer ')) {
+    return header.slice(7).trim();
+  }
+  return parseCookies(req)[COOKIE] || '';
+}
+
 function authorized(req) {
   const code = accessCode();
   if (!code) return true;
-  const got = parseCookies(req)[COOKIE] || '';
+  const got = presentedToken(req);
   const expected = sign(code);
-  if (got.length !== expected.length) return false;
+  if (!got || got.length !== expected.length) return false;
   return timingSafeEqual(Buffer.from(got), Buffer.from(expected));
+}
+
+function corsHeaders(req) {
+  const origin = req.headers.origin || '';
+  if (!origin) return {};
+  const allowed = new Set(
+    (process.env.ALLOWED_ORIGIN || '')
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean),
+  );
+  allowed.add('http://127.0.0.1:8787');
+  allowed.add('http://localhost:8787');
+  if (!allowed.has(origin)) return {};
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Max-Age': '600',
+    Vary: 'Origin',
+  };
 }
 
 function send(res, status, body, headers = {}) {
@@ -269,6 +298,18 @@ function limited(ip) {
 }
 
 async function readBody(req) {
+  if (req.body && typeof req.body === 'object' && !Buffer.isBuffer(req.body)) return req.body;
+  if (typeof req.body === 'string') {
+    if (!req.body.trim()) return {};
+    try {
+      return JSON.parse(req.body);
+    } catch {
+      const error = new Error('Invalid request');
+      error.status = 400;
+      throw error;
+    }
+  }
+
   const chunks = [];
   let size = 0;
   for await (const chunk of req) {
@@ -348,25 +389,42 @@ function clientIp(req) {
   return req.socket.remoteAddress || 'local';
 }
 
-const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
+function requestPath(req) {
+  const pathname = new URL(req.url || '/', 'http://localhost').pathname;
+  for (const route of ['/api/session', '/api/trackers', '/api/chat', '/index.html']) {
+    if (pathname === route || pathname.endsWith(route)) return route;
+  }
+  if (pathname === '/' || pathname.endsWith('/cvn-hub-api') || pathname.endsWith('/cvn-hub-api/')) return '/';
+  return pathname;
+}
+
+export async function hub(req, res) {
+  const reply = (status, body, headers = {}) => send(res, status, body, { ...corsHeaders(req), ...headers });
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204, { ...corsHeaders(req), 'Content-Length': '0' });
+    res.end();
+    return;
+  }
+
+  const pathname = requestPath(req);
 
   try {
-    if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html')) {
-      send(res, 200, readFileSync(path.join(root, 'index.html'), 'utf8'));
+    if (req.method === 'GET' && (pathname === '/' || pathname === '/index.html')) {
+      reply(200, readFileSync(path.join(root, 'index.html'), 'utf8'));
       return;
     }
 
-    if (req.method === 'GET' && url.pathname === '/api/session') {
+    if (req.method === 'GET' && pathname === '/api/session') {
       const required = Boolean(accessCode());
-      send(res, 200, { required, ok: authorized(req) });
+      reply(200, { required, ok: authorized(req) });
       return;
     }
 
-    if (req.method === 'POST' && url.pathname === '/api/session') {
+    if (req.method === 'POST' && pathname === '/api/session') {
       const code = accessCode();
       if (!code) {
-        send(res, 200, { ok: true });
+        reply(200, { ok: true });
         return;
       }
       const body = await readBody(req);
@@ -375,51 +433,57 @@ const server = http.createServer(async (req, res) => {
       const codeBuf = Buffer.from(code);
       const same = givenBuf.length === codeBuf.length && timingSafeEqual(givenBuf, codeBuf);
       if (!same) {
-        send(res, 401, { error: 'That access code is not right.' });
+        reply(401, { error: 'That access code is not right.' });
         return;
       }
-      send(res, 200, { ok: true }, {
+      reply(200, { ok: true, token: sign(code) }, {
         'Set-Cookie': `${COOKIE}=${sign(code)}; HttpOnly; SameSite=Lax; Path=/; Max-Age=1209600`,
       });
       return;
     }
 
-    if ((url.pathname === '/api/trackers' || url.pathname === '/api/chat') && !authorized(req)) {
-      send(res, 401, { error: 'Enter the access code to open the hub.' });
+    if ((pathname === '/api/trackers' || pathname === '/api/chat') && !authorized(req)) {
+      reply(401, { error: 'Enter the access code to open the hub.' });
       return;
     }
 
-    if (req.method === 'GET' && url.pathname === '/api/trackers') {
+    if (req.method === 'GET' && pathname === '/api/trackers') {
       const pack = await getPack();
-      send(res, 200, { trackers: pack.trackers, asOf: new Date(pack.at).toISOString() });
+      reply(200, { trackers: pack.trackers, asOf: new Date(pack.at).toISOString() });
       return;
     }
 
-    if (req.method === 'POST' && url.pathname === '/api/chat') {
+    if (req.method === 'POST' && pathname === '/api/chat') {
       if (limited(clientIp(req))) {
-        send(res, 429, { error: 'Too many questions. Wait a minute and try again.' });
+        reply(429, { error: 'Too many questions. Wait a minute and try again.' });
         return;
       }
       const body = await readBody(req);
       const focus = TRACKERS.some((tracker) => tracker.key === body.focus) ? body.focus : null;
-      send(res, 200, await askChatGPT(body.messages, focus));
+      reply(200, await askChatGPT(body.messages, focus));
       return;
     }
 
-    send(res, 404, { error: 'Not found' });
+    reply(404, { error: 'Not found' });
   } catch (error) {
     const status = error.status || 500;
     console.error(error);
-    send(res, status, { error: error.message || 'The hub hit a problem.' });
+    reply(status, { error: error.message || 'The hub hit a problem.' });
   }
-});
+}
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`CVN Marketing Hub at http://127.0.0.1:${PORT}`);
-  getPack()
-    .then((pack) => {
-      const names = pack.trackers.map((tracker) => `${tracker.title} → ${tracker.landingTab}`).join('; ');
-      console.log(`Sheets ready (${pack.data.length} chars): ${names}`);
-    })
-    .catch((error) => console.error('Sheet load failed:', error.message));
-});
+const startedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const runningInCloud = Boolean(process.env.FUNCTION_TARGET || process.env.K_SERVICE);
+
+if (startedDirectly && !runningInCloud) {
+  const server = http.createServer(hub);
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`CVN Marketing Hub at http://127.0.0.1:${PORT}`);
+    getPack()
+      .then((pack) => {
+        const names = pack.trackers.map((tracker) => `${tracker.title} → ${tracker.landingTab}`).join('; ');
+        console.log(`Sheets ready (${pack.data.length} chars): ${names}`);
+      })
+      .catch((error) => console.error('Sheet load failed:', error.message));
+  });
+}

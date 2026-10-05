@@ -2,6 +2,10 @@
   "name": "cvn-marketing-hub",
   "private": true,
   "type": "module",
+  "main": "server.mjs",
+  "engines": {
+    "node": "22"
+  },
   "scripts": {
     "start": "node server.mjs"
   }

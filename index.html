@@ -351,11 +351,28 @@ const STATIC_TRACKERS = [
   },
 ];
 
+const CHAT_API = 'https://europe-west2-rpla-40917.cloudfunctions.net/cvn-hub-api';
+const API_BASE = location.hostname.endsWith('github.io') ? CHAT_API : '';
+
 let trackers = [];
 let currentKey = null;
 let thread = [];
 let pending = false;
 let chatAvailable = true;
+
+function apiUrl(path) {
+  const relative = path.replace(/^\//, '');
+  return API_BASE ? `${API_BASE.replace(/\/$/, '')}/${relative}` : relative;
+}
+
+function authHeaders(extra = {}) {
+  const headers = { ...extra };
+  try {
+    const token = sessionStorage.getItem('cvn_hub_token');
+    if (token) headers.Authorization = `Bearer ${token}`;
+  } catch { /* session storage can be blocked */ }
+  return headers;
+}
 
 function tick(){
   const now = new Date();
@@ -518,7 +535,7 @@ async function send(text){
   question.style.height = 'auto';
   thread.push({ role: 'user', content });
   if (!chatAvailable) {
-    thread.push({ role: 'assistant', content: 'This page can open the live sheets. Asking a question needs the private hub, and GitHub Pages only serves the page.' });
+    thread.push({ role: 'assistant', content: 'This page can open the live sheets. The chat service could not be reached just now.' });
     paint();
     if (window.matchMedia('(max-width: 860px)').matches) setChatOpen(true);
     return;
@@ -526,9 +543,9 @@ async function send(text){
   pending = true;
   paint();
   try {
-    const res = await fetch('api/chat', {
+    const res = await fetch(apiUrl('/api/chat'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({
         focus: currentKey,
         messages: thread.filter((message) => !message.error).map(({ role, content }) => ({ role, content })),
@@ -536,6 +553,7 @@ async function send(text){
     });
     const data = await res.json().catch(() => ({}));
     if (res.status === 401) {
+      try { sessionStorage.removeItem('cvn_hub_token'); } catch { /* ignore */ }
       document.getElementById('gate').hidden = false;
       throw new Error(data.error || 'Enter the access code to continue.');
     }
@@ -587,7 +605,7 @@ function useStaticTrackers(){
 
 async function loadTrackers(){
   try {
-    const res = await fetch('api/trackers');
+    const res = await fetch(apiUrl('/api/trackers'), { headers: authHeaders() });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'The trackers could not be loaded.');
     trackers = data.trackers || [];
@@ -604,7 +622,7 @@ async function loadTrackers(){
 async function boot(){
   paint();
   try {
-    const res = await fetch('api/session');
+    const res = await fetch(apiUrl('/api/session'), { headers: authHeaders() });
     if (!res.ok) throw new Error('no session');
     const session = await res.json();
     if (session.required && !session.ok) {
@@ -621,7 +639,7 @@ document.getElementById('gateForm').addEventListener('submit', async (event) => 
   event.preventDefault();
   const gateErr = document.getElementById('gateErr');
   gateErr.textContent = '';
-  const res = await fetch('/api/session', {
+  const res = await fetch(apiUrl('/api/session'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ code: document.getElementById('code').value }),
@@ -630,6 +648,9 @@ document.getElementById('gateForm').addEventListener('submit', async (event) => 
   if (!res.ok) {
     gateErr.textContent = data.error || 'That access code is not right.';
     return;
+  }
+  if (data.token) {
+    try { sessionStorage.setItem('cvn_hub_token', data.token); } catch { /* ignore */ }
   }
   document.getElementById('gate').hidden = true;
   try { await loadTrackers(); }
