@@ -232,7 +232,7 @@
         <div class="eyebrow">Client Marketing Hub</div>
         <h1>Every number,<br><span>one place.</span></h1>
         <p class="lede">Open a tracker beside the chat. Ask about the numbers, and the answer stays with the sheet.</p>
-        <div class="rule"><span><b id="trackerCount">06</b> Trackers</span></div>
+        <div class="rule"><span><b id="trackerCount">07</b> Trackers</span></div>
         <div class="grid" id="grid"></div>
         <footer>
           <div class="tagline">Labour<i></i>Commercial<i></i>Litigation</div>
@@ -259,7 +259,7 @@
       <div class="chat-head">
         <div>
           <h2>Ask about the numbers</h2>
-          <p id="chatContext">Answers come from the six live trackers.</p>
+          <p id="chatContext">Answers come from the seven live trackers.</p>
         </div>
         <button class="chat-close" id="chatClose" type="button">Close</button>
       </div>
@@ -338,6 +338,14 @@ const COPY = {
     icon: '<circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.4 6.4"/><path d="M12 12H3"/>',
     bars: [50,62,48,74,66,80,72,90],
     prompts: ['How many leads and won deals were there in the latest week?', 'Which source is bringing the most leads?', 'How did won deals move over the last four weeks?']
+  },
+  budget: {
+    sub: 'SVN 2025 vs CVN 2026',
+    short: 'Budget',
+    desc: 'Monthly ad budget and actual spend per practice-area campaign (Labour, Divorce, General, Commercial, Litigation and Real Estate), comparing SVN 2025 with CVN 2026.',
+    icon: '<rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><circle cx="16.5" cy="14.5" r="1.5"/><path d="M6 3h12"/>',
+    bars: [58,64,52,70,60,76,68,84],
+    prompts: ['How does September spend compare with its budget?', 'Which CVN campaign is over budget?', 'How does 2026 spend compare with 2025?']
   }
 };
 const ALL_PROMPTS = [
@@ -396,6 +404,12 @@ const STATIC_TRACKERS = [
     title: 'Leads & Deals by Source',
     previewUrl: 'https://docs.google.com/spreadsheets/d/1Sh0OXkc0T-3kh03QJrzN7R2Oc2Ju5_OqjMcM3QOXyPw/preview?gid=0#gid=0',
     editUrl: 'https://docs.google.com/spreadsheets/d/1Sh0OXkc0T-3kh03QJrzN7R2Oc2Ju5_OqjMcM3QOXyPw/edit?usp=sharing',
+  },
+  {
+    key: 'budget',
+    title: 'Ad Budget vs Spend',
+    previewUrl: 'https://docs.google.com/spreadsheets/d/1wwGHQlW_hgRGgCag5UdFMvQqNzKFOWlspSLL4szyciM/preview?gid=1827204527#gid=1827204527',
+    editUrl: 'https://docs.google.com/spreadsheets/d/1wwGHQlW_hgRGgCag5UdFMvQqNzKFOWlspSLL4szyciM/edit?usp=sharing',
   },
 ];
 
@@ -495,7 +509,7 @@ function paint(){
   } else if (open) {
     chatContext.textContent = `${open.title} is open. Questions can still use the other trackers.`;
   } else {
-    chatContext.textContent = 'Answers come from the six live trackers.';
+    chatContext.textContent = 'Answers come from the seven live trackers.';
   }
 }
 
